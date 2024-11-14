@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: trial
-        run:  ${{ vars.version }}
+        run: echo ${{ vars.version }}
 
       # - name: Checkout code
       #   uses: actions/checkout@v4
