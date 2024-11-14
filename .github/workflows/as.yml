@@ -1,0 +1,13 @@
+on :
+  push:
+    branches:
+      - issue#1
+    tags:
+      - 'v*'
+
+jobs:
+    build:
+    runs-on: ubuntu-latest
+    steps:
+        -name: trial
+        run: echo "Hello, world!"
