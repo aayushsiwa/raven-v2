@@ -1,3 +1,5 @@
+name: Trial
+
 on:
   push:
     branches:
@@ -10,4 +12,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: trial
-        run: echo "Hello, world!"
+        run: echo ${{ variables.version }}
