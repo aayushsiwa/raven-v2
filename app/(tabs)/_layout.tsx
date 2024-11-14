@@ -1,59 +1,63 @@
-import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
+import React from "react";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Tabs } from "expo-router";
+import { View } from "react-native";
+import { useTheme } from "styled-components/native"; // Import useTheme hook
+import { useClientOnlyValue } from "@/components/useClientOnlyValue";
+import { useSelectedCategories } from "../context/SelectedCategoriesContext"; // Import context
 
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
+    name: React.ComponentProps<typeof FontAwesome>["name"];
+    color: string;
 }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+    return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+    const { selectedCategories } = useSelectedCategories(); // Only use selectedCategories if needed
+    const theme = useTheme(); // Access the current theme
 
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="two"
-        options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-        }}
-      />
-    </Tabs>
-  );
+    return (
+        <View style={{ flex: 1 }}>
+            <Tabs
+                screenOptions={{
+                    // Use theme values for active tab tint color
+                    tabBarActiveTintColor: theme.buttonBackground, // Active tab color from theme
+                    // Optionally apply inactive tab color if you have a specific theme for it
+                    tabBarInactiveTintColor: theme.text, // Inactive tab text color based on theme text
+                    headerShown: useClientOnlyValue(false, false),
+                    tabBarStyle: { backgroundColor: theme.background }, // Tab bar background color based on theme
+                    tabBarLabelStyle: { color: theme.text }, // Label text color based on theme
+                }}
+            >
+                <Tabs.Screen
+                    name="index"
+                    options={{
+                        title: "Feed",
+                        tabBarIcon: ({ color }) => (
+                            <TabBarIcon name="feed" color={color} />
+                        ),
+                    }}
+                />
+                <Tabs.Screen
+                    name="two"
+                    options={{
+                        title: "Subscriptions",
+                        tabBarIcon: ({ color }) => (
+                            <TabBarIcon name="heart" color={color} />
+                        ),
+                    }}
+                />
+                <Tabs.Screen
+                    name="three"
+                    options={{
+                        title: "Settings",
+                        tabBarIcon: ({ color }) => (
+                            <TabBarIcon name="gear" color={color} />
+                        ),
+                    }}
+                />
+            </Tabs>
+        </View>
+    );
 }
