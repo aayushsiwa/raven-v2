@@ -12,7 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: trial
-        run: echo `expr ${{ vars.version }} + 1`
+        run: |
+              version=`expr ${{ vars.version }} + 1`
+              echo $version
 
       # - name: Checkout code
       #   uses: actions/checkout@v4
