@@ -32,7 +32,7 @@ name: Android App APK Build
 on:
   push:
     branches:
-      - new-features
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
