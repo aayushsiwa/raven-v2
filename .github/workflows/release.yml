@@ -1,0 +1,74 @@
+name: Release App
+
+on:
+  release:
+    types: [ published ]
+
+permissions:
+  contents: write
+  id-token: write
+  pages: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+          cache: "npm"
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm install
+
+      # Build the LaTex resume using a GitHub Action
+      - name: Build App
+        run: eas build --platform android --profile production --local --output ${{ github.workspace }}/app-release.apk
+
+      - name: Upload apk to the GitHub release that triggered the workflow
+        run: |
+          gh release upload ${{ github.event.release.tag_name }} app-release.apk
+        # gh release upload ${{ github.event.release.tag_name }} 
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      # - name: Move resume.pdf to a different folder
+      #   run: |
+      #     mkdir ../gh-pages
+      #     mv resume.pdf ../gh-pages
+
+      # - name: Deploy 🚀
+      #   uses: JamesIves/github-pages-deploy-action@v4
+      #   with:
+      #     folder: ../gh-pages
+
+      # - name: Upload a Build Artifact
+      #   uses: actions/upload-artifact@v4.4.2
+      #   with:
+      #     name: github-pages
+      #     path: ./
+
+      # - name: Upload resume to GitHub Pages
+      #   uses: actions/deploy-pages@v4.0.5
+      #   with:
+      #     # Name of the artifact to deploy
+      #     artifact_name: github-pages
