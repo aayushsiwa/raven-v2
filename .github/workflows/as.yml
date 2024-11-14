@@ -58,7 +58,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
         # get variable from stored in settings -> secrets
-          tag_name: ${{ github.variable }} # Use the tag that triggered the workflow
+          tag_name: v${{ github.version }} # Use the tag that triggered the workflow
           release_name: Release ${{ github.version }}
           # body: |
           #   Changes in this Release:
