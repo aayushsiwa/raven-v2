@@ -74,22 +74,21 @@ jobs:
           name: app-release
           path: ${{ github.workspace }}/app-release.apk
 
-      - name: Create GitHub Release
-        id: release
-        uses: gh-actions/create-release@v1
+      - name: Create Release - local
+        uses: varun-bst/release-action@v1.7
         with:
-          tag_name: ${{ github.sha }}
-          release_name: "Release ${{ github.sha }}"
+          tag: ${{ github.sha }} # Use the commit SHA as the tag
+          name: "Release ${{ github.sha }}" # Optional: Set the name of the release
           body: "APK release for commit ${{ github.sha }}"
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          draft: false # Marks the release as not a draft
+          prerelease: false # Marks the release as not a prerelease
+          artifact: ${{ github.workspace }}/app-release.apk # Path to the APK to upload
+          token: ${{ secrets.GITHUB_TOKEN }} # Uses the default GitHub token for authentication
 
-      - name: Upload APK to Release
-        uses: gh-actions/upload-release-asset@v1
+      - name: Upload Release Asset
+        uses: tanyagray/action-upload-release-asset@v1.1.3
         with:
-          upload_url: ${{ steps.release.outputs.upload_url }}
-          asset_path: ${{ github.workspace }}/app-release.apk
-          asset_name: app-release.apk
-          asset_content_type: application/vnd.android.package-archive
+          upload_url: ${{ steps.release.outputs.upload_url }} # Get the upload URL from the previous step
+          asset_path: ${{ github.workspace }}/app-release.apk # Path to the APK file
+          asset_name: app-release.apk # Name of the APK file
+          asset_content_type: application/vnd.android.package-archive # MIME type for APKs
