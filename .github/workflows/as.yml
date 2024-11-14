@@ -1,4 +1,4 @@
-on :
+on:
   push:
     branches:
       - issue#1
@@ -6,8 +6,8 @@ on :
       - 'v*'
 
 jobs:
-    build:
+  build:
     runs-on: ubuntu-latest
     steps:
-        -name: trial
+      - name: trial
         run: echo "Hello, world!"
