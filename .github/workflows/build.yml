@@ -1,40 +1,28 @@
-name: Build APK on Push
-
 on:
   push:
     branches:
       - master
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: 🏗 Setup repo
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: 🏗 Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
+          cache: yarn
 
-      - name: Setup EAS
+      - name: 🏗 Setup EAS
         uses: expo/expo-github-action@v8
         with:
-            eas-version: latest
-            token: ${{ secrets.EXPO_TOKEN }}
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
 
       - name: 📦 Install dependencies
         run: yarn install
 
       - name: 🚀 Build app
         run: eas build --non-interactive
-
-      - name: Run EAS Build for Android
-        run: eas build --platform android --profile production
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4.4.3
-        with:
-          name: android-apk
-          path: ./build/*.apk
