@@ -31,7 +31,7 @@ jobs:
         run: eas build --platform android --profile production
 
       - name: Upload APK
-        uses: actions/upload-artifact@latest
+        uses: actions/upload-artifact@4.4.3
         with:
           name: android-apk
           path: ./build/*.apk
